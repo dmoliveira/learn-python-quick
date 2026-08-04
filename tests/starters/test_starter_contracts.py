@@ -21,6 +21,14 @@ STARTERS = {
         "recommend_unseen",
         ["interactions", "user_id", "k"],
     ),
+    "exercises/easy/07_job_batches/answer.py": (
+        "plan_job_batches",
+        ["jobs", "batch_size"],
+    ),
+    "exercises/easy/08_training_config/answer.py": (
+        "validate_training_config",
+        ["payload"],
+    ),
 }
 
 

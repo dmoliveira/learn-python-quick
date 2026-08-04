@@ -12,10 +12,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CORE_EXAMPLES = [
     "chapters/00_start_here/example.py",
+    "chapters/00_start_here/learning_loop_example.py",
     "chapters/01_python_fundamentals/example.py",
+    "chapters/01_python_fundamentals/order_quote_example.py",
     "chapters/02_data_structures_and_iteration/example.py",
+    "chapters/02_data_structures_and_iteration/session_window_example.py",
     "chapters/03_types_oop_and_pydantic/example.py",
+    "chapters/03_types_oop_and_pydantic/prediction_boundary_example.py",
     "chapters/04_files_regex_and_http/example.py",
+    "chapters/04_files_regex_and_http/jsonl_quality_example.py",
     "chapters/05_numpy_and_pandas/example.py",
     "chapters/06_ml_workflows_and_metrics/example.py",
     "chapters/07_trees_and_xgboost/example.py",

@@ -39,10 +39,73 @@ to stream and inspect.
 Every Requests call needs an explicit timeout. Call `raise_for_status()` before trusting the body.
 Inject a session or transport in tests; core tests never contact a live service.
 
+## Design a boundary pipeline
+
+Reliable boundary code does a few explicit steps:
+
+```text
+locate resource → open/connect → read bytes/text → parse shape → validate meaning → calculate
+```
+
+Keep these steps visible. “File not found,” “invalid JSON,” and “valid JSON with a missing field” are
+different failures and need different context. Wrap an exception only when you can add useful domain
+information, and preserve the original with `raise ... from error`.
+
+## Streaming and atomic output
+
+JSONL and CSV can be processed one record at a time. Streaming controls memory but also changes error
+timing: malformed line 50,000 appears only when iteration reaches it.
+
+For important output, write to a temporary file in the same filesystem, flush/close it, then replace
+the destination. This avoids leaving a half-written final file after a crash. The small course writer
+creates parent directories but intentionally does not claim transactional durability.
+
+## Worked problem: JSONL quality report
+
+[`jsonl_quality_example.py`](jsonl_quality_example.py) uses a temporary directory, writes two typed
+log events, reads them lazily, appends malformed text, and proves the parser reports line 3.
+
+```bash
+uv run python chapters/04_files_regex_and_http/jsonl_quality_example.py
+```
+
+The temporary directory keeps the example repeatable and leaves no repository state. The calculation
+does not depend on a live service or a user's home directory.
+
+## HTTP decisions beyond `get()`
+
+- **Timeout:** use a finite connect/read budget; a default of “forever” is unsafe.
+- **Status:** 4xx usually means changing the request; 5xx may be transient.
+- **Retry:** retry only operations safe to repeat, with bounded attempts and backoff.
+- **Idempotency:** GET is designed to be repeatable; POST may need an idempotency key.
+- **Session:** reuse connections when many requests target one service.
+- **Contract:** validate content type and body shape before business logic.
+
+Tests should inject a fake response for success, timeout, status error, and malformed JSON. Live tests
+belong in an explicit integration job because uptime and rate limits are outside unit-test control.
+
+## Regex failure modes
+
+- A loose search can accept a valid substring inside invalid text; prefer `fullmatch` for contracts.
+- `.*` can consume more than expected; use precise character classes.
+- Nested ambiguous repetition can cause catastrophic backtracking on long input.
+- Regex is a parser for regular text shapes, not a good replacement for JSON/HTML/SQL parsers.
+
+## Boundary engineering checklist
+
+- [ ] Paths are `Path` objects and encoding is explicit.
+- [ ] Files/resources close on success and failure.
+- [ ] Large input can stream or has a documented size limit.
+- [ ] Parse errors include line/record context.
+- [ ] HTTP calls have timeout, status handling, and an injectable transport.
+- [ ] Retry safety and maximum attempts are explicit.
+- [ ] Tests make no real network call by default.
+
 ## Run it
 
 ```bash
 uv run python chapters/04_files_regex_and_http/example.py
+uv run python chapters/04_files_regex_and_http/jsonl_quality_example.py
 ```
 
 The HTTP response in this example is a fake. No network call occurs.
@@ -60,3 +123,5 @@ The HTTP response in this example is a fake. No network call occurs.
 - [`json`](https://docs.python.org/3/library/json.html) and [`csv`](https://docs.python.org/3/library/csv.html)
 - [`re`](https://docs.python.org/3/library/re.html)
 - [Requests quickstart](https://requests.readthedocs.io/en/latest/user/quickstart/)
+- [RFC 9110: HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110) — free primary reference for
+  methods, status codes, and request/response meaning.

@@ -1,5 +1,7 @@
 from solutions.easy.incident_log import triage_incidents
+from solutions.easy.job_batches import plan_job_batches
 from solutions.easy.sales_summary import summarize_sales
+from solutions.easy.training_config import validate_training_config
 from solutions.hard.recommender import recommend_unseen
 from solutions.hard.risk_pipeline import build_risk_pipeline
 from solutions.medium.classification_metrics import evaluate_binary_classifier
@@ -8,9 +10,11 @@ from tests.contracts import (
     check_classification_metrics,
     check_customer_features,
     check_incident_triage,
+    check_job_batches,
     check_recommender,
     check_risk_pipeline,
     check_sales_summary,
+    check_training_config,
 )
 
 
@@ -36,3 +40,11 @@ def test_risk_pipeline_solution() -> None:
 
 def test_recommender_solution() -> None:
     check_recommender(recommend_unseen)
+
+
+def test_job_batches_solution() -> None:
+    check_job_batches(plan_job_batches)
+
+
+def test_training_config_solution() -> None:
+    check_training_config(validate_training_config)

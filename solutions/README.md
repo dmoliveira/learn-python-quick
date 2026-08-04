@@ -58,6 +58,24 @@ descending and tie names ascending. This is O(interactions + unique-items log un
 valuable baseline but reinforces popularity, lacks personalization, and treats repeated events as
 independent positive evidence.
 
+## 07 · Plan job batches
+
+**File:** [`easy/job_batches.py`](easy/job_batches.py)
+
+The solution normalizes each job into new data before checking duplicate IDs. This catches IDs that
+differ only by whitespace and proves input stays unchanged. A fixed four-key count schema is easier
+for downstream code than keys that appear only when a status is present. At production scale, stream
+batches when the complete normalized list cannot fit in memory.
+
+## 08 · Validate a training configuration
+
+**File:** [`easy/training_config.py`](easy/training_config.py)
+
+The strict Pydantic model rejects silent coercion and extra fields at the boundary. A `mode="before"`
+validator enforces the exercise's exact float rule before Pydantic can convert input. Pydantic still
+wraps that error with the `learning_rate` field location. Validators normalize local values only;
+they do not contact storage or start training.
+
 ## Validate all answers
 
 ```bash

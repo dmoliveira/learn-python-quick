@@ -2,13 +2,14 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable, Sequence
+from collections.abc import Callable, Mapping, Sequence
 from typing import Any
 
 import numpy as np
 import pandas as pd
 import pytest
 from pandas.testing import assert_frame_equal
+from pydantic import ValidationError
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 
@@ -18,6 +19,8 @@ FeatureFunction = Callable[[pd.DataFrame], pd.DataFrame]
 MetricFunction = Callable[[Sequence[int], Sequence[int]], dict[str, object]]
 PipelineFunction = Callable[..., Pipeline]
 RecommendFunction = Callable[..., list[str]]
+JobBatchFunction = Callable[..., dict[str, object]]
+TrainingConfigFunction = Callable[[Mapping[str, object]], dict[str, object]]
 
 
 def check_sales_summary(function: SalesFunction) -> None:
@@ -172,6 +175,79 @@ def check_recommender(function: RecommendFunction) -> None:
     assert function(interactions, user_id="u1", k=99) == ["c", "d"]
     with pytest.raises(ValueError, match=r".+"):
         function(interactions, user_id="u1", k=0)
+
+
+def check_job_batches(function: JobBatchFunction) -> None:
+    jobs = [
+        {"id": " job-1 ", "status": " QUEUED "},
+        {"id": "job-2", "status": "running"},
+        {"id": "job-3", "status": "succeeded"},
+    ]
+    original = [job.copy() for job in jobs]
+    assert function(jobs, batch_size=2) == {
+        "batches": [
+            [
+                {"id": "job-1", "status": "queued"},
+                {"id": "job-2", "status": "running"},
+            ],
+            [{"id": "job-3", "status": "succeeded"}],
+        ],
+        "status_counts": {"queued": 1, "running": 1, "succeeded": 1, "failed": 0},
+    }
+    assert jobs == original
+    assert function([], batch_size=3) == {
+        "batches": [],
+        "status_counts": {"queued": 0, "running": 0, "succeeded": 0, "failed": 0},
+    }
+    with pytest.raises(ValueError, match="batch_size"):
+        function(jobs, batch_size=0)
+    with pytest.raises(ValueError, match="duplicate"):
+        function(
+            [{"id": "same", "status": "queued"}, {"id": " same ", "status": "failed"}],
+            batch_size=1,
+        )
+    with pytest.raises(ValueError, match="unknown status"):
+        function([{"id": "job", "status": "waiting"}], batch_size=1)
+    for invalid in (
+        {"id": " ", "status": "queued"},
+        {"id": "job"},
+        {"id": "job", "status": "queued", "owner": "u1"},
+    ):
+        with pytest.raises(ValueError, match=r".+"):
+            function([invalid], batch_size=1)
+
+
+def check_training_config(function: TrainingConfigFunction) -> None:
+    payload: dict[str, object] = {
+        "model_name": " Tiny MLP ",
+        "learning_rate": 0.01,
+        "epochs": 8,
+    }
+    original = payload.copy()
+    assert function(payload) == {
+        "model_name": "tiny-mlp",
+        "learning_rate": 0.01,
+        "epochs": 8,
+        "seed": 42,
+    }
+    assert payload == original
+    assert function({**payload, "seed": 7})["seed"] == 7
+
+    invalid_payloads = [
+        {},
+        {**payload, "owner": "team"},
+        {**payload, "model_name": " "},
+        {**payload, "learning_rate": 1},
+        {**payload, "learning_rate": True},
+        {**payload, "learning_rate": float("nan")},
+        {**payload, "epochs": True},
+        {**payload, "epochs": 0},
+        {**payload, "seed": -1},
+        {**payload, "seed": False},
+    ]
+    for invalid in invalid_payloads:
+        with pytest.raises(ValidationError):
+            function(invalid)
 
 
 def callable_from(module: Any, name: str) -> Callable[..., Any]:
