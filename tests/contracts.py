@@ -21,6 +21,8 @@ PipelineFunction = Callable[..., Pipeline]
 RecommendFunction = Callable[..., list[str]]
 JobBatchFunction = Callable[..., dict[str, object]]
 TrainingConfigFunction = Callable[[Mapping[str, object]], dict[str, object]]
+MissingValueFunction = Callable[[pd.DataFrame], pd.DataFrame]
+ThresholdFunction = Callable[[Sequence[int], Sequence[float], float], dict[str, object]]
 
 
 def check_sales_summary(function: SalesFunction) -> None:
@@ -248,6 +250,93 @@ def check_training_config(function: TrainingConfigFunction) -> None:
     for invalid in invalid_payloads:
         with pytest.raises(ValidationError):
             function(invalid)
+
+
+def check_missing_values(function: MissingValueFunction) -> None:
+    frame = pd.DataFrame(
+        {
+            "country": ["BR", None, "US", None],
+            "age": [31.0, 44.0, np.nan, 27.0],
+            "plan": ["pro", "free", "pro", "free"],
+        },
+        index=[10, 11, 12, 13],
+    )
+    original = frame.copy(deep=True)
+    expected = pd.DataFrame(
+        {
+            "column": ["country", "age", "plan"],
+            "missing_count": [2, 1, 0],
+            "missing_rate": [0.5, 0.25, 0.0],
+        }
+    )
+    assert_frame_equal(function(frame), expected, check_dtype=False)
+    assert_frame_equal(frame, original)
+
+    empty_rows = pd.DataFrame(
+        {
+            "zeta": pd.Series(dtype="float64"),
+            "alpha": pd.Series(dtype="object"),
+        }
+    )
+    empty_summary = function(empty_rows)
+    assert empty_summary.to_dict(orient="records") == [
+        {"column": "alpha", "missing_count": 0, "missing_rate": 0.0},
+        {"column": "zeta", "missing_count": 0, "missing_rate": 0.0},
+    ]
+    assert np.isfinite(empty_summary["missing_rate"]).all()
+
+    with pytest.raises(ValueError, match="columns"):
+        function(pd.DataFrame())
+    with pytest.raises(ValueError, match="columns"):
+        function(pd.DataFrame([[1, 2]], columns=["same", "same"]))
+    with pytest.raises(ValueError, match="columns"):
+        function(pd.DataFrame({1: ["value"]}))
+
+
+def check_threshold_selection(function: ThresholdFunction) -> None:
+    labels = [1, 0, 1, 0, 1]
+    probabilities = [0.9, 0.8, 0.7, 0.6, 0.4]
+    original_labels = labels.copy()
+    original_probabilities = probabilities.copy()
+    actual = function(labels, probabilities, 2 / 3)
+    assert set(actual) == {"threshold", "precision", "recall", "predicted_positive"}
+    assert actual["threshold"] == pytest.approx(0.7)
+    assert actual["precision"] == pytest.approx(2 / 3)
+    assert actual["recall"] == pytest.approx(2 / 3)
+    assert actual["predicted_positive"] == 3
+    assert labels == original_labels
+    assert probabilities == original_probabilities
+
+    precision_tie = function([1, 1, 0], [0.9, 0.8, 0.1], 0.5)
+    assert precision_tie == {
+        "threshold": 0.9,
+        "precision": 1.0,
+        "recall": 0.5,
+        "predicted_positive": 1,
+    }
+    full_recall = function([1, 0, 1], [0.9, 0.5, 0.2], 1.0)
+    assert full_recall["threshold"] == pytest.approx(0.2)
+    assert full_recall["recall"] == 1.0
+
+    invalid_calls: list[tuple[Sequence[object], Sequence[object], object]] = [
+        ([], [], 0.5),
+        ([1], [0.8, 0.7], 0.5),
+        ([1, 2], [0.8, 0.7], 0.5),
+        ([True], [0.8], 0.5),
+        ([1], [True], 0.5),
+        ([1], [-0.1], 0.5),
+        ([1], [1.1], 0.5),
+        ([1], [float("nan")], 0.5),
+        ([1], [float("inf")], 0.5),
+        ([1], [0.8], 0.0),
+        ([1], [0.8], 1.1),
+        ([1], [0.8], float("nan")),
+        ([1], [0.8], True),
+        ([0, 0], [0.8, 0.2], 0.5),
+    ]
+    for invalid_labels, invalid_probabilities, invalid_recall in invalid_calls:
+        with pytest.raises(ValueError, match=r".+"):
+            function(invalid_labels, invalid_probabilities, invalid_recall)  # type: ignore[arg-type]
 
 
 def callable_from(module: Any, name: str) -> Callable[..., Any]:

@@ -6,14 +6,18 @@ from solutions.hard.recommender import recommend_unseen
 from solutions.hard.risk_pipeline import build_risk_pipeline
 from solutions.medium.classification_metrics import evaluate_binary_classifier
 from solutions.medium.customer_features import build_customer_features
+from solutions.medium.missing_values import summarize_missing_values
+from solutions.medium.threshold_selection import select_decision_threshold
 from tests.contracts import (
     check_classification_metrics,
     check_customer_features,
     check_incident_triage,
     check_job_batches,
+    check_missing_values,
     check_recommender,
     check_risk_pipeline,
     check_sales_summary,
+    check_threshold_selection,
     check_training_config,
 )
 
@@ -48,3 +52,11 @@ def test_job_batches_solution() -> None:
 
 def test_training_config_solution() -> None:
     check_training_config(validate_training_config)
+
+
+def test_missing_values_solution() -> None:
+    check_missing_values(summarize_missing_values)
+
+
+def test_threshold_selection_solution() -> None:
+    check_threshold_selection(select_decision_threshold)

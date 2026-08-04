@@ -76,6 +76,25 @@ validator enforces the exercise's exact float rule before Pydantic can convert i
 wraps that error with the `learning_rate` field location. Validators normalize local values only;
 they do not contact storage or start training.
 
+## 09 · Summarize missing values
+
+**File:** [`medium/missing_values.py`](medium/missing_values.py)
+
+The solution validates column labels before calculating, then lets pandas count every supported
+missing representation. It defines a zero-row rate as `0.0` instead of allowing division to create
+`NaN`. Two sort keys make reports deterministic. A production profiler should also record table
+grain, row count, data version, and important slices; missingness alone does not explain why data is
+absent.
+
+## 10 · Select a decision threshold
+
+**File:** [`medium/threshold_selection.py`](medium/threshold_selection.py)
+
+The solution normalizes finite numeric input, evaluates each observed score, and represents the
+selection rule with `(precision, threshold)`. Maximizing that tuple applies the precision objective
+and higher-threshold tie break together. The rule must be applied to validation data; after selection,
+freeze the threshold and report its precision, recall, and review volume on untouched test data.
+
 ## Validate all answers
 
 ```bash

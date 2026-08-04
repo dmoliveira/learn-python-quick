@@ -29,6 +29,14 @@ STARTERS = {
         "validate_training_config",
         ["payload"],
     ),
+    "exercises/medium/09_missing_values/answer.py": (
+        "summarize_missing_values",
+        ["frame"],
+    ),
+    "exercises/medium/10_threshold_selection/answer.py": (
+        "select_decision_threshold",
+        ["y_true", "probabilities", "minimum_recall"],
+    ),
 }
 
 
