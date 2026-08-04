@@ -37,6 +37,14 @@ STARTERS = {
         "select_decision_threshold",
         ["y_true", "probabilities", "minimum_recall"],
     ),
+    "exercises/hard/11_tensor_batches/answer.py": (
+        "prepare_training_batches",
+        ["features", "labels", "batch_size", "seed"],
+    ),
+    "exercises/hard/12_prediction_envelope/answer.py": (
+        "build_prediction_envelope",
+        ["predictions", "request_id", "model_version"],
+    ),
 }
 
 

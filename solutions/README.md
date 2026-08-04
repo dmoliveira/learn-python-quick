@@ -95,6 +95,24 @@ selection rule with `(precision, threshold)`. Maximizing that tuple applies the 
 and higher-threshold tie break together. The rule must be applied to validation data; after selection,
 freeze the threshold and report its precision, recall, and review volume on untouched test data.
 
+## 11 · Prepare tensor batches
+
+**File:** [`hard/tensor_batches.py`](hard/tensor_batches.py)
+
+The solution validates dimensions and original dtypes before conversion, then creates one seeded
+permutation for both arrays. Advanced indexing and explicit batch copies keep returned arrays
+independent from learner input. NumPy owns this boundary so its contract can run in the core
+environment; a PyTorch training loop can convert each validated batch later.
+
+## 12 · Build a prediction envelope
+
+**File:** [`hard/prediction_envelope.py`](hard/prediction_envelope.py)
+
+Private strict Pydantic models validate local fields, list size, and cross-record ID uniqueness. Only
+after validation does the solution derive alphabetically ordered label counts and dump plain Python
+data. This separation keeps transport shape, derived metadata, and model inference as distinct
+concerns. A production envelope would also need a versioned schema and privacy-aware tracing policy.
+
 ## Validate all answers
 
 ```bash

@@ -69,8 +69,8 @@ def dataset_failures() -> list[str]:
 def exercise_failures() -> list[str]:
     failures: list[str] = []
     exercise_dirs = sorted((ROOT / "exercises").glob("*/*_*"))
-    if len(exercise_dirs) != 10:
-        failures.append(f"expected 10 exercises, found {len(exercise_dirs)}")
+    if len(exercise_dirs) != 12:
+        failures.append(f"expected 12 exercises, found {len(exercise_dirs)}")
     for exercise in exercise_dirs:
         for name in ("README.md", "answer.py", "test_answer.py"):
             if not (exercise / name).exists():
@@ -94,7 +94,7 @@ def main() -> int:
         return 1
     markdown_count = len(list(ROOT.rglob("*.md")))
     print(
-        f"documentation is consistent: {markdown_count} Markdown files, 13 chapters, 10 exercises"
+        f"documentation is consistent: {markdown_count} Markdown files, 13 chapters, 12 exercises"
     )
     return 0
 

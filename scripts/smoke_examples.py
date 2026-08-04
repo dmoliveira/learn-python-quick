@@ -27,16 +27,22 @@ CORE_EXAMPLES = [
     "chapters/06_ml_workflows_and_metrics/threshold_tradeoff_example.py",
     "chapters/07_trees_and_xgboost/example.py",
     "chapters/09_embeddings_and_transformers/example.py",
+    "chapters/09_embeddings_and_transformers/retrieval_evaluation_example.py",
     "chapters/10_recommenders/example.py",
     "chapters/12_performance_and_quality/example.py",
+    "chapters/12_performance_and_quality/membership_benchmark_example.py",
 ]
 OPTIONAL_EXAMPLES = {
     "boost": ["chapters/07_trees_and_xgboost/xgboost_example.py"],
     "deep": [
         "chapters/08_pytorch_and_images/example.py",
+        "chapters/08_pytorch_and_images/autograd_example.py",
         "chapters/10_recommenders/neural_example.py",
     ],
-    "api": ["chapters/11_fastapi_and_mle/example.py"],
+    "api": [
+        "chapters/11_fastapi_and_mle/example.py",
+        "chapters/11_fastapi_and_mle/batch_api_example.py",
+    ],
 }
 NETWORK_GUARD = """\
 import socket
