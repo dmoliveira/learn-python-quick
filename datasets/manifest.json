@@ -2,7 +2,7 @@
   "schema_version": 1,
   "datasets": [
     {
-      "id": "generated-exercise-fixtures-v1",
+      "id": "generated-exercise-fixtures-v2",
       "paths": [
         "datasets/generated/sales.csv",
         "datasets/generated/incidents.log",
@@ -18,7 +18,7 @@
         "datasets/generated/sales.csv": "34d1beed7abebe95da3d64f27145597cb98c9e449dd2b2b0e500341325fbf9b8",
         "datasets/generated/incidents.log": "80712e53513f78d03f2a570dc7a8ac0496af4aec80e9f520569e7215676b809c",
         "datasets/generated/customer_events.csv": "63f2d289cfbb77aac093339b77e0003a61d5a524ac0bd56ae49a4d604c869fca",
-        "datasets/generated/interactions.csv": "7beb687b35d8f927bde034f5fc9325a8f47a8ad0f162c8a1fcb3ed3e3ed64c4e"
+        "datasets/generated/interactions.csv": "5003985cc078b676834917bfc1fb42c13a3bc45946b174347f980b83099eb795"
       }
     },
     {

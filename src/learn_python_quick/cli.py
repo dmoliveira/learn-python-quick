@@ -34,6 +34,8 @@ def main(argv: Sequence[str] | None = None) -> None:
         return
 
     print("Learn Python Quick roadmap\n")
+    print("  Start: Chapter 00 teaches the run-change-test learning loop.\n")
     for chapters, outcome in ROADMAP:
         print(f"  Chapters {chapters}: {outcome}")
     print("\nNext: open chapters/00_start_here/README.md")
+    print("Track: docs/learning-paths.md#my-progress")

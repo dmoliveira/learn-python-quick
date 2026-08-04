@@ -1,7 +1,8 @@
 # Solutions and reasoning
 
-Stop here if you have not tried an exercise. A useful attempt includes a failing test, one hypothesis,
-and a short note about what is unclear.
+Stop here if you have not tried an exercise. First reread its contract, reduce the failure to one
+small input, use one hint, and write one hypothesis. A useful attempt includes a failing test and a
+short note about what is unclear.
 
 These are **reference solutions**, not the only valid designs. Every solution is tested against the
 same public contract used by learners.

@@ -23,6 +23,8 @@ def cosine_similarity_matrix(vectors: ArrayLike) -> NDArray[np.float64]:
     matrix = np.asarray(vectors, dtype=np.float64)
     if matrix.ndim != 2:
         raise ValueError("vectors must be a 2D matrix")
+    if 0 in matrix.shape:
+        raise ValueError("vectors must contain at least one row and one feature")
     norms = np.linalg.norm(matrix, axis=1, keepdims=True)
     normalized = np.divide(matrix, norms, out=np.zeros_like(matrix), where=norms != 0)
     similarities: NDArray[np.float64] = normalized @ normalized.T
@@ -40,6 +42,8 @@ def scaled_dot_product_attention(
     v = np.asarray(value, dtype=np.float64)
     if q.ndim != 2 or k.ndim != 2 or v.ndim != 2:
         raise ValueError("query, key, and value must be 2D")
+    if any(0 in matrix.shape for matrix in (q, k, v)):
+        raise ValueError("query, key, and value axes must be non-empty")
     if q.shape[1] != k.shape[1] or k.shape[0] != v.shape[0]:
         raise ValueError("attention shapes are incompatible")
 
@@ -56,8 +60,17 @@ def tfidf_search(documents: list[str], query: str, *, top_k: int = 3) -> list[Se
         return []
     if top_k < 1:
         raise ValueError("top_k must be at least 1")
+    if not query.strip():
+        raise ValueError("query must contain searchable text")
     vectorizer = TfidfVectorizer(stop_words="english")
-    matrix = vectorizer.fit_transform([*documents, query])
+    try:
+        matrix = vectorizer.fit_transform([*documents, query])
+    except ValueError as error:
+        raise ValueError("documents must contain searchable terms") from error
+    if matrix[:-1].nnz == 0:
+        raise ValueError("documents must contain searchable terms")
+    if matrix[-1].nnz == 0:
+        raise ValueError("query must contain searchable terms")
     scores = cosine_similarity(matrix[-1], matrix[:-1]).ravel()
     order = np.argsort(-scores, kind="stable")[:top_k]
     return [SearchResult(int(index), documents[index], float(scores[index])) for index in order]

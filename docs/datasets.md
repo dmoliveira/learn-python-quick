@@ -19,7 +19,7 @@ sync whenever data usage changes.
 | Diabetes | Regression metrics | No | Packaged by scikit-learn |
 | Wine | pandas and multiclass examples | No | Packaged by scikit-learn |
 | Digits | Small 8×8 image classification | No | Packaged by scikit-learn |
-| Generated sales/log/customer/interaction fixtures | Exercises | No | Created by `datasets/generate.py`; MIT-covered project data |
+| Generated sales/log/customer/interaction fixtures | Exercises | No | Created by `datasets/generate.py`; interactions include UTC event time for temporal evaluation |
 
 Packaged does not mean suitable for every real decision. These datasets are small and simplify
 important social, clinical, and operational context. Use them to learn APIs, not to make real-world

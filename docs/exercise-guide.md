@@ -9,6 +9,9 @@
 5. Run the check after each small step.
 6. Explain your choices before opening the solution.
 
+The default command keeps expected starter output short. Use
+`make exercise-verbose ID=<level>/<name>` when you need the full pytest traceback.
+
 Learner tests are public feedback, not hidden assessment. A passing test is evidence for listed
 cases, not proof that code is correct for every possible input.
 
@@ -23,6 +26,13 @@ cases, not proof that code is correct for every possible input.
 If you are stuck for 20 minutes, reread the hints and run a tiny input in a one-line Python command.
 Then inspect the relevant official documentation. Read the solution only after writing down what is
 unclear.
+
+Before revealing a solution:
+
+1. reread the contract and name the smallest failing case;
+2. write down expected and actual output;
+3. use one exercise hint or primary reference;
+4. write one hypothesis, then run the check again.
 
 ## What to explain
 

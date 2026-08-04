@@ -51,12 +51,13 @@ learner behavior checks are separate.
 
 | Goal | Suggested route | Time |
 |---|---|---:|
-| **Fast Python review** | Chapters 01 → 04 → easy exercises | 3–4 h |
-| **Data Scientist** | Chapters 01 → 07 → metric and pipeline exercises | 7–9 h |
-| **ML Engineer** | Chapters 01 → 12 → hard exercises | 10–14 h |
+| **Fast Python review** | Chapter 00 → 01–04 → easy exercises | 3–4 h |
+| **Data Scientist** | Chapter 00 → 01–07 → metric and pipeline exercises | 7–9 h |
+| **ML Engineer** | Chapter 00 → 01–12 → hard exercises | 10–14 h |
 
-See the detailed [learning paths](docs/learning-paths.md). You can read in order or jump directly to
-one topic—the prerequisites at the top of each chapter show what you need.
+See the detailed [learning paths and progress checklist](docs/learning-paths.md#my-progress). You can
+read in order or jump directly to one topic—the prerequisites at the top of each chapter show what
+you need.
 
 ## 📚 Curriculum
 
