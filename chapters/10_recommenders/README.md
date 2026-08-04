@@ -39,6 +39,12 @@ events and ask whether the model retrieves later relevant items. State:
 Offline ranking gains may not improve satisfaction. Real systems also consider diversity, novelty,
 latency, safety, business constraints, and online experiments.
 
+The runnable example uses `2026-07-10T00:00:00Z` as a global cutoff. It builds popularity only from
+earlier rows, then asks whether the ranking finds `u1`'s later, previously unseen `ml-course` event.
+The same item appears in another user's earlier activity, so it is a valid candidate without future
+leakage. Future items with no positive training interaction are not evaluation candidates because
+this popularity model cannot rank them.
+
 ## Run it
 
 Core popularity baseline:
@@ -58,7 +64,7 @@ uv run python chapters/10_recommenders/neural_example.py
 
 - Add a brand-new user and define a sensible fallback.
 - Compare Precision@2 when relevant items contain one versus four items.
-- Split the generated interactions by an added timestamp.
+- Move the temporal cutoff and explain how the candidate set and Recall@2 change.
 - Solve [Recommend unseen items](../../exercises/hard/06_recommender/README.md).
 
 ## References

@@ -25,7 +25,8 @@ Build a transparent popularity baseline:
 - If fewer than `k` candidates exist, return all candidates.
 - Do not mutate the input.
 
-Try [`interactions.csv`](../../../datasets/generated/interactions.csv), then define one future item as
+Try [`interactions.csv`](../../../datasets/generated/interactions.csv). This exercise uses its first
+two columns; Chapter 10 uses `occurred_at` for a temporal evaluation. Then define one future item as
 relevant and calculate Precision@K.
 
 ## Design before code

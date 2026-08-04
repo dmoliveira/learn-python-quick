@@ -2,7 +2,7 @@
 
 ID ?=
 
-.PHONY: help setup setup-all format lint typecheck test test-solutions test-optional test-all docs examples check build wheel-smoke exercise clean
+.PHONY: help setup setup-all format lint typecheck test test-solutions test-optional test-all docs examples check build wheel-smoke exercise exercise-verbose clean
 
 help: ## Show the available commands.
 	@awk 'BEGIN {FS = ":.*## "; printf "\nLearn Python Quick\n\n"} /^[a-zA-Z_-]+:.*## / {printf "  %-18s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -53,7 +53,11 @@ wheel-smoke: build ## Install the wheel in a clean environment and smoke-test it
 
 exercise: ## Check one learner answer: make exercise ID=easy/01_sales_summary
 	@test -n "$(ID)" || (echo "Use: make exercise ID=easy/01_sales_summary" && exit 2)
-	uv run python -m pytest "exercises/$(ID)/test_answer.py" -q
+	uv run python scripts/check_exercise.py "$(ID)"
+
+exercise-verbose: ## Show full pytest output for one learner answer.
+	@test -n "$(ID)" || (echo "Use: make exercise-verbose ID=easy/01_sales_summary" && exit 2)
+	uv run python scripts/check_exercise.py "$(ID)" --verbose
 
 clean: ## Remove generated caches and build output.
 	rm -rf .coverage .mypy_cache .pytest_cache .ruff_cache build dist
