@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "datasets": [
+    {
+      "id": "generated-exercise-fixtures-v1",
+      "paths": [
+        "datasets/generated/sales.csv",
+        "datasets/generated/incidents.log",
+        "datasets/generated/customer_events.csv",
+        "datasets/generated/interactions.csv"
+      ],
+      "purpose": "Deterministic inputs for sales, log, feature, and recommender exercises",
+      "source": "Created by this project with datasets/generate.py",
+      "terms": "MIT License (project-generated fixtures)",
+      "network_required": false,
+      "redistributed": true,
+      "sha256": {
+        "datasets/generated/sales.csv": "34d1beed7abebe95da3d64f27145597cb98c9e449dd2b2b0e500341325fbf9b8",
+        "datasets/generated/incidents.log": "80712e53513f78d03f2a570dc7a8ac0496af4aec80e9f520569e7215676b809c",
+        "datasets/generated/customer_events.csv": "63f2d289cfbb77aac093339b77e0003a61d5a524ac0bd56ae49a4d604c869fca",
+        "datasets/generated/interactions.csv": "7beb687b35d8f927bde034f5fc9325a8f47a8ad0f162c8a1fcb3ed3e3ed64c4e"
+      }
+    },
+    {
+      "id": "sklearn-breast-cancer-wisconsin-diagnostic",
+      "loader": "sklearn.datasets.load_breast_cancer",
+      "purpose": "Binary classification and leakage-safe pipelines",
+      "source": "https://scikit-learn.org/stable/datasets/toy_dataset.html#breast-cancer-dataset",
+      "terms": "See scikit-learn dataset description and original UCI attribution",
+      "network_required": false,
+      "redistributed": false
+    },
+    {
+      "id": "sklearn-diabetes",
+      "loader": "sklearn.datasets.load_diabetes",
+      "purpose": "Regression and error metrics",
+      "source": "https://scikit-learn.org/stable/datasets/toy_dataset.html#diabetes-dataset",
+      "terms": "See scikit-learn dataset description",
+      "network_required": false,
+      "redistributed": false
+    },
+    {
+      "id": "sklearn-wine",
+      "loader": "sklearn.datasets.load_wine",
+      "purpose": "pandas and multiclass examples",
+      "source": "https://scikit-learn.org/stable/datasets/toy_dataset.html#wine-recognition-dataset",
+      "terms": "See scikit-learn dataset description and original UCI attribution",
+      "network_required": false,
+      "redistributed": false
+    },
+    {
+      "id": "sklearn-digits",
+      "loader": "sklearn.datasets.load_digits",
+      "purpose": "Small image classification and PyTorch MLP training",
+      "source": "https://scikit-learn.org/stable/datasets/toy_dataset.html#optical-recognition-of-handwritten-digits-dataset",
+      "terms": "See scikit-learn dataset description and original UCI attribution",
+      "network_required": false,
+      "redistributed": false
+    }
+  ]
+}

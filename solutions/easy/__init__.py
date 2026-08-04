@@ -1,0 +1,1 @@
+"""Easy exercise solutions."""

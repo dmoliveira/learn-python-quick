@@ -1,0 +1,5 @@
+2026-08-04T09:00:00Z INFO checkout request-complete
+2026-08-04T09:01:12Z ERROR payments card-provider-timeout
+not-a-valid-log-line
+2026-08-04T09:04:31Z WARNING search latency-high
+2026-08-04T09:05:10Z CRITICAL checkout database-unavailable

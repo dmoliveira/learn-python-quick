@@ -1,0 +1,7 @@
+customer_id,event,amount,occurred_at
+c-001,purchase,29.90,2026-07-01T10:00:00Z
+c-002,support,0.00,2026-07-01T11:30:00Z
+c-001,purchase,12.50,2026-07-03T09:00:00Z
+c-003,visit,0.00,2026-07-03T12:15:00Z
+c-002,purchase,7.00,2026-07-04T14:00:00Z
+c-001,support,0.00,2026-07-05T08:45:00Z

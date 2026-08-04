@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="420" viewBox="0 0 1200 420" role="img" aria-labelledby="title description">
+  <title id="title">Learn Python Quick</title>
+  <desc id="description">A colorful learning path from modern Python code to data, models, and APIs.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="0.55" stop-color="#172554"/>
+      <stop offset="1" stop-color="#164e63"/>
+    </linearGradient>
+    <linearGradient id="path" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#facc15"/>
+      <stop offset="0.5" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#34d399"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="420" rx="28" fill="url(#background)"/>
+  <circle cx="1060" cy="60" r="180" fill="#0ea5e9" opacity="0.09"/>
+  <circle cx="110" cy="390" r="210" fill="#facc15" opacity="0.06"/>
+
+  <g transform="translate(72 74)">
+    <rect width="82" height="34" rx="17" fill="#facc15"/>
+    <text x="41" y="23" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" font-weight="700" fill="#111827">v0.1</text>
+    <text x="0" y="102" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="62" font-weight="800" fill="#f8fafc">Learn Python Quick</text>
+    <text x="2" y="150" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="23" fill="#bae6fd">Modern Python → Data Science → Machine Learning Engineering</text>
+    <text x="2" y="190" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18" fill="#cbd5e1">Read less. Run code. Solve useful problems. Measure what works.</text>
+  </g>
+
+  <path d="M95 320 C250 258, 330 360, 480 300 S735 250, 870 305 S1035 300, 1110 248" fill="none" stroke="url(#path)" stroke-width="7" stroke-linecap="round" opacity="0.85" filter="url(#glow)"/>
+  <g font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-weight="700" font-size="20" text-anchor="middle" aria-hidden="true">
+    <g transform="translate(110 316)"><circle r="31" fill="#facc15"/><text y="7" fill="#111827">PY</text></g>
+    <g transform="translate(360 320)"><circle r="31" fill="#38bdf8"/><text y="7" fill="#082f49">[]</text></g>
+    <g transform="translate(610 272)"><circle r="31" fill="#818cf8"/><text y="7" fill="#1e1b4b">ƒx</text></g>
+    <g transform="translate(850 302)"><circle r="31" fill="#34d399"/><text y="7" fill="#022c22">AI</text></g>
+    <g transform="translate(1090 254)"><circle r="31" fill="#fb7185"/><text y="7" fill="#4c0519">↗</text></g>
+  </g>
+</svg>
