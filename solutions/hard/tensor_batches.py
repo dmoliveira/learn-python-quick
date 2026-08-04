@@ -33,9 +33,8 @@ def prepare_training_batches(
         raise ValueError("features must contain real numeric values")
     if np.iscomplexobj(feature_values):
         raise ValueError("features must contain real numeric values")
-    if label_values.size and (
-        np.issubdtype(label_values.dtype, np.bool_)
-        or not np.issubdtype(label_values.dtype, np.integer)
+    if np.issubdtype(label_values.dtype, np.bool_) or not np.issubdtype(
+        label_values.dtype, np.integer
     ):
         raise ValueError("labels must use a non-boolean integer dtype")
 

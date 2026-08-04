@@ -34,11 +34,13 @@ boost = ["xgboost>=2.1,<4"]
 deep = ["torch>=2.4,<3"]
 api = [
   "fastapi>=0.115,<1",
+  # The locked Starlette 1.3 TestClient prefers the httpx2 distribution/module.
   "httpx2>=2,<3",
   "uvicorn>=0.30,<1",
 ]
 all = [
   "fastapi>=0.115,<1",
+  # Keep this aligned with the API extra and locked Starlette TestClient.
   "httpx2>=2,<3",
   "torch>=2.4,<3",
   "uvicorn>=0.30,<1",

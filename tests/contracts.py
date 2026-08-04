@@ -381,6 +381,7 @@ def check_tensor_batches(function: TensorBatchFunction) -> None:
         ([["one"]], [0], 1, 0),
         (np.array([[1 + 2j]]), [0], 1, 0),
         ([[1.0], [2.0]], np.array([0.0, 1.0]), 1, 0),
+        (np.empty((0, 2)), np.array([], dtype=np.float64), 1, 0),
         ([[1.0]], np.array([True]), 1, 0),
         ([[1.0]], np.array([-1]), 1, 0),
         ([[1.0]], np.array([0]), 0, 0),

@@ -45,10 +45,13 @@ make examples
 make exercise ID=easy/01_sales_summary
 make test-solutions
 make wheel-smoke
+make setup-all && make test-optional
 ```
 
 The first exercise check fails until you implement its `answer.py`. `make test` validates repository
-code and official solutions, so it remains green with untouched starters.
+code and official solutions, so it remains green with untouched starters. `make check` enforces a
+60-second aggregate core budget; after installation, `make test-optional` enforces a 180-second budget
+for all optional tests and example smokes.
 
 ## Troubleshooting
 

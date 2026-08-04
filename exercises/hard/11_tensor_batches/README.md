@@ -27,7 +27,7 @@ Features and labels must be shuffled by the same permutation so each label stays
 - Generate row order with `np.random.default_rng(seed).permutation(row_count)`.
 - Apply that one order to features and labels, then make consecutive batches. Keep the final short
   batch instead of dropping it.
-- When features have shape `(0, feature_count)` and labels are empty, return `[]`.
+- When features have shape `(0, feature_count)` and labels are an empty integer array, return `[]`.
 - Raise `ValueError` for a broken input rule, including zero feature columns.
 - Return fresh arrays that do not share memory with either input. Do not mutate either input.
 

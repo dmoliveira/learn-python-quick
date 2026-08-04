@@ -1,20 +1,34 @@
 # Glossary
 
 - **API:** a documented boundary through which software communicates.
+- **Autograd:** automatic calculation of derivatives through recorded tensor operations.
+- **Axis:** one dimension of an array, such as rows or feature columns.
+- **Backpressure:** limiting new work when a system is already at capacity.
 - **Broadcasting:** NumPy rules for operating on arrays with compatible but different shapes.
+- **Calibration:** how closely predicted probabilities match observed outcome rates.
+- **Candidate set:** the items a ranking system is allowed and able to score.
+- **Cardinality:** the expected key relationship in a join, such as many rows to one lookup row.
 - **Classification:** predicting one of a set of labels.
 - **Data leakage:** information unavailable at prediction time accidentally reaches training.
+- **Deterministic:** producing the same defined output order or result for the same input and setup.
 - **Embedding:** a numeric vector designed to represent useful properties of an item.
 - **Epoch:** one pass over a training dataset.
 - **Estimator:** scikit-learn's general name for an object that learns with `fit`.
 - **Feature:** an input value used by a model.
+- **Grain:** what one row in a table represents.
+- **Idempotent:** safe to repeat without changing the result beyond the first successful operation.
 - **Inference:** using a trained model to produce output.
 - **Iterator:** an object that yields one item at a time.
 - **Logit:** an unnormalized model score, often converted to a probability.
+- **Mini-batch:** a bounded group of training rows processed in one model update.
+- **MRR:** mean reciprocal rank, which rewards placing the first relevant result early.
 - **Pipeline:** ordered transformations and a model treated as one fitted object.
 - **Protocol:** a type contract based on supported behavior instead of inheritance.
 - **Regression:** predicting a numeric value.
 - **Seed:** an initial value used to make pseudo-random behavior repeatable.
+- **Serialization:** converting data into a stable form such as JSON for storage or transport.
 - **Tensor:** a multidimensional array; in PyTorch it can also track gradients.
+- **Test split:** held-out data used once after model and threshold choices are fixed.
 - **Transformer:** a neural architecture built around attention and feed-forward blocks.
+- **Validation split:** held-out training data used to choose model, hyperparameters, or threshold.
 - **Vectorization:** expressing work as array operations instead of Python-level element loops.

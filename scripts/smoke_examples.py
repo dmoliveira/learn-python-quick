@@ -51,7 +51,9 @@ def denied(*args, **kwargs):
     raise RuntimeError("network disabled by Learn Python Quick smoke runner")
 
 socket.create_connection = denied
-socket.socket.connect = denied
+for method_name in ("connect", "connect_ex", "sendto"):
+    if hasattr(socket.socket, method_name):
+        setattr(socket.socket, method_name, denied)
 """
 
 
@@ -79,12 +81,25 @@ def run(
 
 
 def verify_network_guard(*, working_directory: str, environment: dict[str, str]) -> None:
+    verification = """
+import socket
+
+attempts = [
+    lambda: socket.create_connection(("127.0.0.1", 9), timeout=0.01),
+    lambda: socket.socket().connect_ex(("127.0.0.1", 9)),
+    lambda: socket.socket(type=socket.SOCK_DGRAM).sendto(b"check", ("127.0.0.1", 9)),
+]
+blocked = 0
+for attempt in attempts:
+    try:
+        attempt()
+    except RuntimeError as error:
+        if "network disabled by Learn Python Quick smoke runner" in str(error):
+            blocked += 1
+print(f"blocked={blocked}")
+"""
     result = subprocess.run(
-        [
-            sys.executable,
-            "-c",
-            "import socket; socket.create_connection(('127.0.0.1', 9), timeout=0.01)",
-        ],
+        [sys.executable, "-c", verification],
         cwd=working_directory,
         env=environment,
         check=False,
@@ -92,9 +107,9 @@ def verify_network_guard(*, working_directory: str, environment: dict[str, str])
         text=True,
         timeout=5,
     )
-    if "network disabled by Learn Python Quick smoke runner" not in result.stderr:
+    if result.returncode or "blocked=3" not in result.stdout:
         raise RuntimeError("the subprocess network guard did not activate")
-    print("ok  subprocess sockets are blocked")
+    print("ok  direct Python socket connection/datagram paths are blocked")
 
 
 def main() -> int:
@@ -128,7 +143,10 @@ def main() -> int:
                 environment=environment,
                 timeout=90 if args.optional else 45,
             )
-    print(f"{len(scripts)} example(s) passed outside the repository root with sockets blocked")
+    print(
+        f"{len(scripts)} example(s) passed outside the repository root "
+        "with direct Python socket connection/datagram paths blocked"
+    )
     return 0
 
 

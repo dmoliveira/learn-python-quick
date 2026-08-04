@@ -222,8 +222,8 @@ uv run python chapters/11_fastapi_and_mle/batch_api_example.py
 - Add a request ID to the response and test order/correlation in process.
 - Decide whether one invalid row should reject the complete batch and justify the policy.
 - Solve [Build a prediction envelope](../../exercises/hard/12_prediction_envelope/README.md).
-- Try [Add API batch prediction](../../docs/exercise-guide.md#challenge-catalog), then compare it with
-  the bounded course route.
+- Try [Profile batch inference](../../docs/exercise-guide.md#challenge-catalog) without adding a
+  fragile speed assertion.
 
 ## References
 

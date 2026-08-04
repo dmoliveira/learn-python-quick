@@ -2,7 +2,7 @@
 
 ID ?=
 
-.PHONY: help setup setup-all format lint typecheck test test-solutions test-optional test-all docs examples check build wheel-smoke exercise exercise-verbose clean
+.PHONY: help setup setup-all format lint typecheck test test-solutions test-optional _test-optional test-all docs examples check _check build wheel-smoke exercise exercise-verbose clean
 
 help: ## Show the available commands.
 	@awk 'BEGIN {FS = ":.*## "; printf "\nLearn Python Quick\n\n"} /^[a-zA-Z_-]+:.*## / {printf "  %-18s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -30,8 +30,14 @@ test: ## Run the always-green core repository tests.
 test-solutions: ## Validate every official exercise solution.
 	uv run pytest tests/solutions
 
-test-optional: ## Run optional integration tests (requires setup-all).
+test-optional: ## Run optional tests and examples under 3 minutes (requires setup-all).
+	uv run python scripts/run_with_budget.py 180 $(MAKE) _test-optional
+
+_test-optional:
 	uv run pytest tests/optional
+	uv run python scripts/smoke_examples.py --optional boost
+	uv run python scripts/smoke_examples.py --optional deep
+	uv run python scripts/smoke_examples.py --optional api
 
 test-all: ## Run core and optional tests.
 	uv run pytest tests
@@ -42,7 +48,10 @@ docs: ## Check local links, chapter shape, and dataset metadata.
 examples: ## Run core chapter examples from an outside directory.
 	uv run python scripts/smoke_examples.py
 
-check: lint typecheck test docs examples ## Run the fast offline-default quality gate.
+check: ## Run the offline-default gate under 60 seconds.
+	uv run python scripts/run_with_budget.py 60 $(MAKE) _check
+
+_check: lint typecheck test docs examples
 
 build: ## Build wheel and source distributions.
 	rm -rf dist
