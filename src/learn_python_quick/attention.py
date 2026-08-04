@@ -25,7 +25,8 @@ def cosine_similarity_matrix(vectors: ArrayLike) -> NDArray[np.float64]:
         raise ValueError("vectors must be a 2D matrix")
     norms = np.linalg.norm(matrix, axis=1, keepdims=True)
     normalized = np.divide(matrix, norms, out=np.zeros_like(matrix), where=norms != 0)
-    return normalized @ normalized.T
+    similarities: NDArray[np.float64] = normalized @ normalized.T
+    return similarities
 
 
 def scaled_dot_product_attention(

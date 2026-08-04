@@ -30,7 +30,8 @@ def zscore_with_numpy(values: ArrayLike) -> NDArray[np.float64]:
     standard_deviation = float(array.std())
     if standard_deviation == 0:
         return np.zeros_like(array)
-    return (array - array.mean()) / standard_deviation
+    normalized: NDArray[np.float64] = (array - array.mean()) / standard_deviation
+    return normalized
 
 
 @lru_cache(maxsize=128)
