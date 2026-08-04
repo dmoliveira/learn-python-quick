@@ -15,7 +15,6 @@ env:
   OPENBLAS_NUM_THREADS: "1"
   MKL_NUM_THREADS: "1"
   TOKENIZERS_PARALLELISM: "false"
-  UV_FROZEN: "true"
   UV_NO_PROGRESS: "true"
 
 jobs:
