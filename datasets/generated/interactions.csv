@@ -1,0 +1,10 @@
+user_id,item_id,rating
+u1,python-book,1
+u1,ml-course,1
+u2,python-book,1
+u2,data-course,1
+u2,ml-course,1
+u3,data-course,1
+u3,systems-book,1
+u4,python-book,1
+u4,data-course,1

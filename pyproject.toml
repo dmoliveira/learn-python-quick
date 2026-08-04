@@ -1,0 +1,109 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "learn-python-quick"
+version = "0.1.0"
+description = "A practical modern Python path for data science, machine learning, and AI engineers."
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = { file = "LICENSE" }
+authors = [{ name = "Diego Oliveira" }]
+keywords = ["python", "data-science", "machine-learning", "pytorch", "education"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Education",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Education",
+]
+dependencies = [
+  "numpy>=2.0,<3",
+  "pandas>=2.2,<4",
+  "pydantic>=2.8,<3",
+  "requests>=2.32,<3",
+  "scikit-learn>=1.5,<2",
+]
+
+[project.optional-dependencies]
+boost = ["xgboost>=2.1,<4"]
+deep = ["torch>=2.4,<3"]
+api = [
+  "fastapi>=0.115,<1",
+  "httpx2>=2,<3",
+  "uvicorn>=0.30,<1",
+]
+all = [
+  "fastapi>=0.115,<1",
+  "httpx2>=2,<3",
+  "torch>=2.4,<3",
+  "uvicorn>=0.30,<1",
+  "xgboost>=2.1,<4",
+]
+
+[project.urls]
+Homepage = "https://github.com/dmoliveira/learn-python-quick"
+Documentation = "https://github.com/dmoliveira/learn-python-quick/tree/main/docs"
+Issues = "https://github.com/dmoliveira/learn-python-quick/issues"
+Source = "https://github.com/dmoliveira/learn-python-quick"
+
+[project.scripts]
+lpq = "learn_python_quick.cli:main"
+
+[dependency-groups]
+dev = [
+  "hatchling>=1.27",
+  "mypy>=1.14",
+  "pandas-stubs>=2.2",
+  "pytest>=8.3",
+  "pytest-cov>=6.0",
+  "pytest-timeout>=2.3",
+  "ruff>=0.9",
+  "types-requests>=2.32",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/learn_python_quick"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = [".venv", "dist"]
+
+[tool.ruff.lint]
+select = ["B", "C4", "E", "F", "I", "PT", "RUF", "SIM", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"exercises/**/answer.py" = ["F401"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+files = ["src"]
+warn_unreachable = true
+
+[[tool.mypy.overrides]]
+module = ["sklearn.*", "xgboost.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "-ra --strict-config --strict-markers --timeout=30"
+testpaths = ["tests"]
+filterwarnings = [
+  "ignore:Setting the shape on a NumPy array has been deprecated in NumPy 2.5\\.:DeprecationWarning:sklearn.datasets._base",
+]
+markers = [
+  "api: requires the api extra",
+  "boost: requires the boost extra",
+  "deep: requires the deep extra",
+  "network: explicitly permits a real network call",
+]

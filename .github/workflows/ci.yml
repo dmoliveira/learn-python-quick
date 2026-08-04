@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CI: "true"
+  OMP_NUM_THREADS: "1"
+  OPENBLAS_NUM_THREADS: "1"
+  MKL_NUM_THREADS: "1"
+  TOKENIZERS_PARALLELISM: "false"
+  UV_FROZEN: "true"
+  UV_NO_PROGRESS: "true"
+
+jobs:
+  core:
+    name: Core · Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          version: "0.12.1"
+          enable-cache: true
+          python-version: ${{ matrix.python-version }}
+      - run: uv sync --locked --dev --python "${{ matrix.python-version }}"
+      - run: make check
+
+  wheel:
+    name: Clean wheel install
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          version: "0.12.1"
+          enable-cache: true
+          python-version: "3.12"
+      - run: uv sync --locked --dev
+      - run: make wheel-smoke
+
+  optional:
+    name: Optional · ${{ matrix.extra }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - extra: boost
+            test: tests/optional/test_boosting.py
+          - extra: deep
+            test: tests/optional/test_deep_learning.py
+          - extra: api
+            test: tests/optional/test_api.py
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+        with:
+          version: "0.12.1"
+          enable-cache: true
+          python-version: "3.12"
+      - run: uv sync --locked --dev --extra "${{ matrix.extra }}"
+      - run: uv run pytest "${{ matrix.test }}"
+      - run: uv run python scripts/smoke_examples.py --optional "${{ matrix.extra }}"
