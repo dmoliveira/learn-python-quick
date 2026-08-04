@@ -51,9 +51,9 @@ learner behavior checks are separate.
 
 | Goal | Suggested route | Time |
 |---|---|---:|
-| **Fast Python review** | Chapter 00 → 01–04 → easy exercises | 3–4 h |
-| **Data Scientist** | Chapter 00 → 01–07 → metric and pipeline exercises | 7–9 h |
-| **ML Engineer** | Chapter 00 → 01–12 → hard exercises | 10–14 h |
+| **Fast Python review** | Chapter 00 → 01–04 → easy exercises | 5–7 h |
+| **Data Scientist** | Chapter 00 → 01–07 → medium exercises | 11–15 h |
+| **ML Engineer** | Chapter 00 → 01–12 → hard exercises | 20–28 h |
 
 See the detailed [learning paths and progress checklist](docs/learning-paths.md#my-progress). You can
 read in order or jump directly to one topic—the prerequisites at the top of each chapter show what
@@ -74,8 +74,12 @@ you need.
 | 08 | [PyTorch and image models](chapters/08_pytorch_and_images/README.md) | Tensors, autograd, MLP training, 8×8 digit classification |
 | 09 | [Embeddings and transformers](chapters/09_embeddings_and_transformers/README.md) | Similarity search, attention, transformer building blocks |
 | 10 | [Recommenders](chapters/10_recommenders/README.md) | Popularity, collaborative signals, ranking metrics, neural extension |
-| 11 | [FastAPI and MLE](chapters/11_fastapi_and_mle/README.md) | Typed request/response contracts, model serving, API tests |
+| 11 | [FastAPI and MLE](chapters/11_fastapi_and_mle/README.md) | Typed contracts, bounded batch serving, in-process API tests |
 | 12 | [Performance and quality](chapters/12_performance_and_quality/README.md) | Profiling, vectorization, generators, caching, testing, review |
+
+The curriculum includes 20 core examples, 6 explicit optional examples, and 12 public-contract
+exercises. Scripts run outside the repository with direct Python socket connection/datagram paths
+blocked; the runner is a test guard, not an operating-system sandbox for child executables.
 
 ## 🧩 Exercises that feel like work
 
@@ -91,9 +95,15 @@ grading—everything in this public repository is visible.
 | 🟡 Medium | [Evaluate a classifier](exercises/medium/04_classification_metrics/README.md) | Metrics, edge cases, interpretation |
 | 🔴 Hard | [Train a leakage-safe risk model](exercises/hard/05_risk_pipeline/README.md) | Pipelines, preprocessing, model evaluation |
 | 🔴 Hard | [Recommend unseen items](exercises/hard/06_recommender/README.md) | Ranking, deterministic ties, `Precision@K` |
+| 🟢 Easy | [Plan job batches](exercises/easy/07_job_batches/README.md) | Validation, normalization, stable batching |
+| 🟢 Easy | [Validate a training configuration](exercises/easy/08_training_config/README.md) | Strict Pydantic fields and normalization |
+| 🟡 Medium | [Summarize missing values](exercises/medium/09_missing_values/README.md) | pandas schemas, missingness, stable reports |
+| 🟡 Medium | [Select a decision threshold](exercises/medium/10_threshold_selection/README.md) | Precision/recall constraints and deterministic ties |
+| 🔴 Hard | [Prepare tensor batches](exercises/hard/11_tensor_batches/README.md) | NumPy shapes, aligned shuffling, array ownership |
+| 🔴 Hard | [Build a prediction envelope](exercises/hard/12_prediction_envelope/README.md) | Strict response schemas, derived counts, serialization |
 
-Want more after these six? The [challenge catalog](docs/exercise-guide.md#challenge-catalog) adds
-PyTorch, XGBoost, embeddings, image, and API extensions without making the first path heavy.
+Want more after these twelve? The [challenge catalog](docs/exercise-guide.md#challenge-catalog) adds
+open-ended XGBoost, image, retrieval, recommender, API, and profiling extensions.
 
 ## 📊 Data and evaluation
 
@@ -130,7 +140,7 @@ Run the same gates used by CI:
 ```bash
 make check         # core, offline-default, target under 60 seconds
 make wheel-smoke   # clean wheel install + outside-repo execution
-make setup-all && make test-optional  # optional integrations, target under 3 minutes
+make setup-all && make test-optional  # optional tests + examples, target under 3 minutes
 ```
 
 ## 🤝 Contributing

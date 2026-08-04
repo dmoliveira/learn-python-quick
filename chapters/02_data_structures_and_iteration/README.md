@@ -37,10 +37,70 @@ Useful `itertools` tools include `chain`, `islice`, `pairwise`, `product`, and `
 `groupby` groups adjacent values; sort first when the data is not already grouped. The standard
 library's `collections` and `itertools` often replace custom loops with tested vocabulary.
 
+## Iterable is not iterator
+
+An **iterable** can produce an iterator. An **iterator** remembers its current position and is
+consumed as values are requested.
+
+```python
+numbers = [1, 2, 3]  # iterable: can be iterated many times
+cursor = iter(numbers)  # iterator: one moving cursor
+assert next(cursor) == 1
+assert list(cursor) == [2, 3]
+assert list(cursor) == []
+```
+
+This matters for files, generators, database cursors, and model batches. If you need two passes,
+either recreate the iterator, materialize bounded data, or redesign to finish in one pass.
+
+## Determinism and grouping
+
+Sets and dictionaries provide fast membership/lookup, but ranking still needs an explicit order.
+Use a final key such as `(-count, item_id)` so equal counts do not depend on input or hash order.
+
+`itertools.groupby` groups **adjacent** equal keys. To group all records for a user, first establish a
+user/time ordering—or use a dictionary when preserving streaming order is more important than
+sorting.
+
+## Worked problem: session windows
+
+[`session_window_example.py`](session_window_example.py) turns user events into sessions separated by
+more than 30 minutes:
+
+1. Sort by `(user_id, occurred_at)` to define deterministic adjacency.
+2. Use `groupby` to receive one user's iterator.
+3. Materialize only that user's small group because `pairwise` and a second pass are needed.
+4. Mark a new session when the time gap exceeds the contract.
+5. Use a bounded `deque` separately for recent activity.
+
+```bash
+uv run python chapters/02_data_structures_and_iteration/session_window_example.py
+```
+
+At large scale you may sort upstream, partition by user, and stream one partition at a time. The
+algorithmic question comes before a library choice.
+
+## Complexity you should notice
+
+- Repeated `item in list` inside a loop can become O(n²); prebuild a set when order is not needed.
+- Sorting is usually O(n log n) and requires memory; avoid it when data already has a trusted order.
+- `list(generator)` removes laziness and can exhaust memory on unbounded input.
+- A dictionary lookup is O(1) on average, not a promise for every adversarial case.
+
+## Collection engineering checklist
+
+- [ ] Structure matches the dominant operation: order, lookup, uniqueness, or queueing.
+- [ ] Iterator consumption and number of passes are intentional.
+- [ ] Ranking/grouping has deterministic order and tie rules.
+- [ ] Bounded state is used for streams where possible.
+- [ ] Expected time and memory growth are explained.
+- [ ] Empty and duplicate inputs are covered.
+
 ## Run it
 
 ```bash
 uv run python chapters/02_data_structures_and_iteration/example.py
+uv run python chapters/02_data_structures_and_iteration/session_window_example.py
 ```
 
 ## Try it
@@ -55,3 +115,5 @@ uv run python chapters/02_data_structures_and_iteration/example.py
 - [Built-in data types](https://docs.python.org/3/library/stdtypes.html)
 - [`collections`](https://docs.python.org/3/library/collections.html)
 - [`itertools`](https://docs.python.org/3/library/itertools.html)
+- [Problem Solving with Algorithms and Data Structures using Python](https://runestone.academy/ns/books/published/pythonds3/index.html)
+  — free book for Big-O reasoning and classic structure trade-offs.

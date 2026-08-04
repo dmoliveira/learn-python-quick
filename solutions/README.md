@@ -58,6 +58,61 @@ descending and tie names ascending. This is O(interactions + unique-items log un
 valuable baseline but reinforces popularity, lacks personalization, and treats repeated events as
 independent positive evidence.
 
+## 07 · Plan job batches
+
+**File:** [`easy/job_batches.py`](easy/job_batches.py)
+
+The solution normalizes each job into new data before checking duplicate IDs. This catches IDs that
+differ only by whitespace and proves input stays unchanged. A fixed four-key count schema is easier
+for downstream code than keys that appear only when a status is present. At production scale, stream
+batches when the complete normalized list cannot fit in memory.
+
+## 08 · Validate a training configuration
+
+**File:** [`easy/training_config.py`](easy/training_config.py)
+
+The strict Pydantic model rejects silent coercion and extra fields at the boundary. A `mode="before"`
+validator enforces the exercise's exact float rule before Pydantic can convert input. Pydantic still
+wraps that error with the `learning_rate` field location. Validators normalize local values only;
+they do not contact storage or start training.
+
+## 09 · Summarize missing values
+
+**File:** [`medium/missing_values.py`](medium/missing_values.py)
+
+The solution validates column labels before calculating, then lets pandas count every supported
+missing representation. It defines a zero-row rate as `0.0` instead of allowing division to create
+`NaN`. Two sort keys make reports deterministic. A production profiler should also record table
+grain, row count, data version, and important slices; missingness alone does not explain why data is
+absent.
+
+## 10 · Select a decision threshold
+
+**File:** [`medium/threshold_selection.py`](medium/threshold_selection.py)
+
+The solution normalizes finite numeric input, evaluates each observed score, and represents the
+selection rule with `(precision, threshold)`. Maximizing that tuple applies the precision objective
+and higher-threshold tie break together. The rule must be applied to validation data; after selection,
+freeze the threshold and report its precision, recall, and review volume on untouched test data.
+
+## 11 · Prepare tensor batches
+
+**File:** [`hard/tensor_batches.py`](hard/tensor_batches.py)
+
+The solution validates dimensions and original dtypes before conversion, then creates one seeded
+permutation for both arrays. Advanced indexing and explicit batch copies keep returned arrays
+independent from learner input. NumPy owns this boundary so its contract can run in the core
+environment; a PyTorch training loop can convert each validated batch later.
+
+## 12 · Build a prediction envelope
+
+**File:** [`hard/prediction_envelope.py`](hard/prediction_envelope.py)
+
+Private strict Pydantic models validate local fields, list size, and cross-record ID uniqueness. Only
+after validation does the solution derive alphabetically ordered label counts and dump plain Python
+data. This separation keeps transport shape, derived metadata, and model inference as distinct
+concerns. A production envelope would also need a versioned schema and privacy-aware tracing policy.
+
 ## Validate all answers
 
 ```bash

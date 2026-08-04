@@ -13,7 +13,7 @@ Use this page when you want more detail than the root [README](../README.md).
 - [Metrics field guide](metrics.md) — choose and interpret model measures.
 - [Dataset guide](datasets.md) — provenance, terms, and reproducibility.
 - [Glossary](glossary.md) — short definitions of common Python and ML terms.
-- [Primary references](references.md) — official documentation and original sources.
+- [Reference ladder](references.md) — chapter-indexed official, primary, free, and paid sources.
 
 ## Learning loop
 

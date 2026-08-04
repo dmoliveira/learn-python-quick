@@ -21,6 +21,30 @@ STARTERS = {
         "recommend_unseen",
         ["interactions", "user_id", "k"],
     ),
+    "exercises/easy/07_job_batches/answer.py": (
+        "plan_job_batches",
+        ["jobs", "batch_size"],
+    ),
+    "exercises/easy/08_training_config/answer.py": (
+        "validate_training_config",
+        ["payload"],
+    ),
+    "exercises/medium/09_missing_values/answer.py": (
+        "summarize_missing_values",
+        ["frame"],
+    ),
+    "exercises/medium/10_threshold_selection/answer.py": (
+        "select_decision_threshold",
+        ["y_true", "probabilities", "minimum_recall"],
+    ),
+    "exercises/hard/11_tensor_batches/answer.py": (
+        "prepare_training_batches",
+        ["features", "labels", "batch_size", "seed"],
+    ),
+    "exercises/hard/12_prediction_envelope/answer.py": (
+        "build_prediction_envelope",
+        ["predictions", "request_id", "model_version"],
+    ),
 }
 
 

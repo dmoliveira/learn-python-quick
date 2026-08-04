@@ -13,11 +13,20 @@ LINK_PATTERN = re.compile(r"\[[^]]*]\(([^)]+)\)")
 REQUIRED_CHAPTER_HEADINGS = {"## Outcomes", "## Run it", "## Try it", "## References"}
 
 
+def markdown_documents() -> list[Path]:
+    """Return repository documents, excluding environments and generated build output."""
+    documents: list[Path] = []
+    for document in ROOT.rglob("*.md"):
+        parts = document.relative_to(ROOT).parts
+        if any(part.startswith(".") for part in parts) or parts[0] in {"build", "dist"}:
+            continue
+        documents.append(document)
+    return documents
+
+
 def local_link_failures() -> list[str]:
     failures: list[str] = []
-    for document in ROOT.rglob("*.md"):
-        if any(part.startswith(".") for part in document.relative_to(ROOT).parts):
-            continue
+    for document in markdown_documents():
         for raw_target in LINK_PATTERN.findall(document.read_text(encoding="utf-8")):
             target = raw_target.strip().split(maxsplit=1)[0]
             if target.startswith(("http://", "https://", "mailto:", "#")):
@@ -69,8 +78,8 @@ def dataset_failures() -> list[str]:
 def exercise_failures() -> list[str]:
     failures: list[str] = []
     exercise_dirs = sorted((ROOT / "exercises").glob("*/*_*"))
-    if len(exercise_dirs) != 6:
-        failures.append(f"expected 6 exercises, found {len(exercise_dirs)}")
+    if len(exercise_dirs) != 12:
+        failures.append(f"expected 12 exercises, found {len(exercise_dirs)}")
     for exercise in exercise_dirs:
         for name in ("README.md", "answer.py", "test_answer.py"):
             if not (exercise / name).exists():
@@ -92,8 +101,10 @@ def main() -> int:
         for failure in failures:
             print(f"  - {failure}")
         return 1
-    markdown_count = len(list(ROOT.rglob("*.md")))
-    print(f"documentation is consistent: {markdown_count} Markdown files, 13 chapters, 6 exercises")
+    markdown_count = len(markdown_documents())
+    print(
+        f"documentation is consistent: {markdown_count} Markdown files, 13 chapters, 12 exercises"
+    )
     return 0
 
 

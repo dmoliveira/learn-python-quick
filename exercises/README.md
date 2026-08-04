@@ -1,6 +1,6 @@
 # Exercises
 
-These six problems turn chapter ideas into small work-like tasks. Read the
+These problems turn chapter ideas into small work-like tasks. Read the
 [exercise guide](../docs/exercise-guide.md) before starting.
 
 ```bash

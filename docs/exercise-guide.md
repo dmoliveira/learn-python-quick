@@ -55,5 +55,5 @@ small. Start by writing your own contract, then compare with the chapter example
 | Improve the digits MLP | [Chapter 08](../chapters/08_pytorch_and_images/README.md) | Beat the stated baseline without using test data for tuning |
 | Build semantic search | [Chapter 09](../chapters/09_embeddings_and_transformers/README.md) | Return relevant top-3 text and report Recall@3 on labeled queries |
 | Train a neural recommender | [Chapter 10](../chapters/10_recommenders/README.md) | Compare it with popularity using the same temporal split |
-| Add API batch prediction | [Chapter 11](../chapters/11_fastapi_and_mle/README.md) | Validate 1–100 rows and test 200/422 responses in process |
+| Profile batch inference | [Chapter 11](../chapters/11_fastapi_and_mle/README.md) | Measure 1/10/100 rows in process and justify one batch limit without timing assertions |
 | Profile a slow feature step | [Chapter 12](../chapters/12_performance_and_quality/README.md) | Measure before/after and report time plus memory trade-off |

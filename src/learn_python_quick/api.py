@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Callable
+from collections.abc import Callable, Sequence
 from functools import lru_cache
 from typing import Any, Protocol, TypeVar, cast
 
@@ -40,6 +40,17 @@ class PredictionResponse(BaseModel):
     model_version: str
 
 
+class BatchPredictionRequest(BaseModel):
+    """A bounded group of rows for one in-process model call."""
+
+    model_config = ConfigDict(extra="forbid")
+    rows: list[PredictionRequest] = Field(min_length=1, max_length=100)
+
+
+class BatchPredictionResponse(BaseModel):
+    predictions: list[PredictionResponse]
+
+
 @lru_cache(maxsize=1)
 def _model() -> tuple[Pipeline, tuple[str, ...]]:
     dataset = load_iris()
@@ -71,13 +82,32 @@ def create_app() -> AppLike:
 
     @app.post("/predict", response_model=PredictionResponse)
     def predict(payload: PredictionRequest) -> PredictionResponse:
-        model, labels = _model()
-        probabilities = model.predict_proba([payload.features])[0]
-        label_index = int(probabilities.argmax())
-        return PredictionResponse(
-            label=labels[label_index],
-            confidence=float(probabilities[label_index]),
-            model_version="iris-logistic-v1",
+        return _predict_one(payload)
+
+    @app.post("/predict-batch", response_model=BatchPredictionResponse)
+    def predict_batch(payload: BatchPredictionRequest) -> BatchPredictionResponse:
+        return BatchPredictionResponse(
+            predictions=_predict_many(payload.rows),
         )
 
     return app
+
+
+def _predict_one(payload: PredictionRequest) -> PredictionResponse:
+    return _predict_many([payload])[0]
+
+
+def _predict_many(payloads: Sequence[PredictionRequest]) -> list[PredictionResponse]:
+    model, labels = _model()
+    probability_rows = model.predict_proba([payload.features for payload in payloads])
+    responses: list[PredictionResponse] = []
+    for probabilities in probability_rows:
+        label_index = int(probabilities.argmax())
+        responses.append(
+            PredictionResponse(
+                label=labels[label_index],
+                confidence=float(probabilities[label_index]),
+                model_version="iris-logistic-v1",
+            )
+        )
+    return responses
